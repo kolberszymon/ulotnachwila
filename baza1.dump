@@ -50,9 +50,68 @@ $$;
 
 ALTER FUNCTION public.przygotujmiejsca() OWNER TO admin;
 
+--
+-- Name: zarezerwujbilet(); Type: FUNCTION; Schema: public; Owner: admin
+--
+
+CREATE FUNCTION public.zarezerwujbilet() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+begin
+IF (SELECT wolne FROM miejsca WHERE id_sztuki = NEW.id_sztuki AND numer_miejsca = NEW.numer_miejsca) = true THEN
+UPDATE miejsca
+SET wolne = false
+WHERE id_sztuki = NEW.id_sztuki AND numer_miejsca = NEW.numer_miejsca;
+RETURN NEW;
+ELSE
+RETURN NULL;
+END IF;
+END;
+$$;
+
+
+ALTER FUNCTION public.zarezerwujbilet() OWNER TO admin;
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: bilety; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.bilety (
+    id_biletu integer NOT NULL,
+    numer_miejsca integer NOT NULL,
+    imie text NOT NULL,
+    nazwisko text NOT NULL,
+    id_sztuki integer
+);
+
+
+ALTER TABLE public.bilety OWNER TO admin;
+
+--
+-- Name: bilety_id_biletu_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.bilety_id_biletu_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.bilety_id_biletu_seq OWNER TO admin;
+
+--
+-- Name: bilety_id_biletu_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: admin
+--
+
+ALTER SEQUENCE public.bilety_id_biletu_seq OWNED BY public.bilety.id_biletu;
+
 
 --
 -- Name: miejsca; Type: TABLE; Schema: public; Owner: admin
@@ -96,25 +155,59 @@ CREATE TABLE public.sztuka (
 ALTER TABLE public.sztuka OWNER TO admin;
 
 --
+-- Name: bilety id_biletu; Type: DEFAULT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.bilety ALTER COLUMN id_biletu SET DEFAULT nextval('public.bilety_id_biletu_seq'::regclass);
+
+
+--
+-- Data for Name: bilety; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.bilety (id_biletu, numer_miejsca, imie, nazwisko, id_sztuki) FROM stdin;
+\.
+
+
+--
 -- Data for Name: miejsca; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
 COPY public.miejsca (numer_miejsca, wolne, id_sztuki) FROM stdin;
-1	t	5
-2	t	5
-3	t	5
-4	t	5
-5	t	5
-6	t	5
-7	t	5
-8	t	5
-9	t	5
-10	t	5
-11	t	5
-12	t	5
-13	t	5
-14	t	5
-15	t	5
+1	t	6
+2	t	6
+3	t	6
+4	t	6
+5	t	6
+6	t	6
+7	t	6
+8	t	6
+9	t	6
+10	t	6
+11	t	6
+12	t	6
+13	t	6
+14	t	6
+15	t	6
+1	t	8
+2	t	8
+3	t	8
+4	t	8
+5	t	8
+6	t	8
+7	t	8
+8	t	8
+1	t	9
+2	t	9
+3	t	9
+4	t	9
+5	t	9
+6	t	9
+7	t	9
+8	t	9
+9	t	9
+10	t	9
+11	t	9
 \.
 
 
@@ -123,15 +216,32 @@ COPY public.miejsca (numer_miejsca, wolne, id_sztuki) FROM stdin;
 --
 
 COPY public.sztuka (id, data_sztuki, nazwa, ilosc_miejsc) FROM stdin;
-5	2020-01-13 22:13:11.670432	Prosze1	15
+6	2020-01-13 23:12:08.024197	Bajeczna Imprezka	15
+8	2020-01-13 23:12:43.241192	Sienkiewicz. Historia Prawdziwa	8
+9	2020-01-13 23:19:14.22376	Wixapol BY STACHU	11
 \.
+
+
+--
+-- Name: bilety_id_biletu_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.bilety_id_biletu_seq', 3, true);
 
 
 --
 -- Name: prim; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.prim', 5, true);
+SELECT pg_catalog.setval('public.prim', 9, true);
+
+
+--
+-- Name: bilety bilety_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.bilety
+    ADD CONSTRAINT bilety_pkey PRIMARY KEY (id_biletu);
 
 
 --
@@ -143,10 +253,25 @@ ALTER TABLE ONLY public.sztuka
 
 
 --
+-- Name: bilety buyticket; Type: TRIGGER; Schema: public; Owner: admin
+--
+
+CREATE TRIGGER buyticket BEFORE INSERT ON public.bilety FOR EACH ROW EXECUTE FUNCTION public.zarezerwujbilet();
+
+
+--
 -- Name: sztuka populatesits; Type: TRIGGER; Schema: public; Owner: admin
 --
 
 CREATE TRIGGER populatesits AFTER INSERT ON public.sztuka FOR EACH ROW EXECUTE FUNCTION public.przygotujmiejsca();
+
+
+--
+-- Name: bilety bilety_id_sztuki_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.bilety
+    ADD CONSTRAINT bilety_id_sztuki_fkey FOREIGN KEY (id_sztuki) REFERENCES public.sztuka(id) ON DELETE CASCADE;
 
 
 --
