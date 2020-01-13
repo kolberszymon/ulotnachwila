@@ -1,0 +1,163 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 12.1
+-- Dumped by pg_dump version 12.1
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: miejsce; Type: TYPE; Schema: public; Owner: admin
+--
+
+CREATE TYPE public.miejsce AS (
+	rzad integer,
+	miejsce integer
+);
+
+
+ALTER TYPE public.miejsce OWNER TO admin;
+
+--
+-- Name: przygotujmiejsca(); Type: FUNCTION; Schema: public; Owner: admin
+--
+
+CREATE FUNCTION public.przygotujmiejsca() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+counter INTEGER := 0;
+BEGIN
+LOOP
+EXIT WHEN counter = NEW.ilosc_miejsc;
+INSERT INTO miejsca(id_sztuki, numer_miejsca) VALUES(NEW.id, counter + 1);
+counter := counter + 1;
+END LOOP;
+RETURN NULL;
+END;
+$$;
+
+
+ALTER FUNCTION public.przygotujmiejsca() OWNER TO admin;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: miejsca; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.miejsca (
+    numer_miejsca integer,
+    wolne boolean DEFAULT true,
+    id_sztuki integer
+);
+
+
+ALTER TABLE public.miejsca OWNER TO admin;
+
+--
+-- Name: prim; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+CREATE SEQUENCE public.prim
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.prim OWNER TO admin;
+
+--
+-- Name: sztuka; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.sztuka (
+    id integer NOT NULL,
+    data_sztuki timestamp without time zone NOT NULL,
+    nazwa text NOT NULL,
+    ilosc_miejsc integer DEFAULT 5 NOT NULL
+);
+
+
+ALTER TABLE public.sztuka OWNER TO admin;
+
+--
+-- Data for Name: miejsca; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.miejsca (numer_miejsca, wolne, id_sztuki) FROM stdin;
+1	t	5
+2	t	5
+3	t	5
+4	t	5
+5	t	5
+6	t	5
+7	t	5
+8	t	5
+9	t	5
+10	t	5
+11	t	5
+12	t	5
+13	t	5
+14	t	5
+15	t	5
+\.
+
+
+--
+-- Data for Name: sztuka; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public.sztuka (id, data_sztuki, nazwa, ilosc_miejsc) FROM stdin;
+5	2020-01-13 22:13:11.670432	Prosze1	15
+\.
+
+
+--
+-- Name: prim; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public.prim', 5, true);
+
+
+--
+-- Name: sztuka sztuka_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.sztuka
+    ADD CONSTRAINT sztuka_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sztuka populatesits; Type: TRIGGER; Schema: public; Owner: admin
+--
+
+CREATE TRIGGER populatesits AFTER INSERT ON public.sztuka FOR EACH ROW EXECUTE FUNCTION public.przygotujmiejsca();
+
+
+--
+-- Name: miejsca miejsca_id_sztuki_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.miejsca
+    ADD CONSTRAINT miejsca_id_sztuki_fkey FOREIGN KEY (id_sztuki) REFERENCES public.sztuka(id) ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
