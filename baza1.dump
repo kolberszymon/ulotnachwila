@@ -72,6 +72,26 @@ $$;
 
 ALTER FUNCTION public.zarezerwujbilet() OWNER TO admin;
 
+--
+-- Name: zwolnijmiejsce(); Type: FUNCTION; Schema: public; Owner: admin
+--
+
+CREATE FUNCTION public.zwolnijmiejsce() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+IF (SELECT wolne FROM miejsca WHERE id_sztuki= OLD.id_sztuki AND numer_miejsca = OLD.numer_miejsca) = false THEN
+UPDATE miejsca
+SET wolne = true
+WHERE id_sztuki = OLD.id_sztuki AND numer_miejsca = OLD.numer_miejsca;
+END IF;
+RETURN NULL;
+END;
+$$;
+
+
+ALTER FUNCTION public.zwolnijmiejsce() OWNER TO admin;
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -192,7 +212,6 @@ COPY public.miejsca (numer_miejsca, wolne, id_sztuki) FROM stdin;
 1	t	8
 2	t	8
 3	t	8
-4	t	8
 5	t	8
 6	t	8
 7	t	8
@@ -208,6 +227,7 @@ COPY public.miejsca (numer_miejsca, wolne, id_sztuki) FROM stdin;
 9	t	9
 10	t	9
 11	t	9
+4	t	8
 \.
 
 
@@ -226,7 +246,7 @@ COPY public.sztuka (id, data_sztuki, nazwa, ilosc_miejsc) FROM stdin;
 -- Name: bilety_id_biletu_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public.bilety_id_biletu_seq', 3, true);
+SELECT pg_catalog.setval('public.bilety_id_biletu_seq', 4, true);
 
 
 --
@@ -264,6 +284,13 @@ CREATE TRIGGER buyticket BEFORE INSERT ON public.bilety FOR EACH ROW EXECUTE FUN
 --
 
 CREATE TRIGGER populatesits AFTER INSERT ON public.sztuka FOR EACH ROW EXECUTE FUNCTION public.przygotujmiejsca();
+
+
+--
+-- Name: bilety zwolnijmiejsca; Type: TRIGGER; Schema: public; Owner: admin
+--
+
+CREATE TRIGGER zwolnijmiejsca AFTER DELETE ON public.bilety FOR EACH ROW EXECUTE FUNCTION public.zwolnijmiejsce();
 
 
 --
