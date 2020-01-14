@@ -13,12 +13,12 @@
 <body>
     <form method="post" action="/buyticket">
         <h1>Kup bilet</h1>
-        Imie: <%= user.imie %> <br>
-        Nazwisko: <%= user.nazwisko %> <br>
-        Sztuka: <%= sztuka.nazwa %> <br>
+        Imie: <%= user.imie %> <input type="hidden" value="<%= user.imie %>" name="imie"> <br>
+        Nazwisko: <%= user.nazwisko %> <input type="hidden" value="<%= user.nazwisko %>" name="nazwisko"> <br>
+        Sztuka: <%= sztuka.nazwa %> <input type="hidden" value="<%= sztuka.id %>" name="id_sztuki"><br>
         Data: <%= sztuka.data_sztuki %> <br>
         Miejsce:
-        <select name="miejsca">
+        <select name="numer_miejsca">
             <% miejsca.forEach(function(miejsce){ %>
                 <option value="<%= miejsce.numer_miejsca %>"><%= miejsce.numer_miejsca %></option>
             <% }); %>

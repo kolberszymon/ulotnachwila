@@ -36,8 +36,10 @@ const homePage = (request, response) => {
 const buyTicket = (request, response) => {
 	var sztukaData = [];
 	console.log(parseInt(request.body.id_sztuki, 10))
+	
+	pool.query('BEGIN;')
 	pool
-		.query('SELECT data_sztuki, nazwa FROM sztuka WHERE id = $1', [parseInt(request.body.id_sztuki, 10)])
+		.query('SELECT data_sztuki, nazwa, id FROM sztuka WHERE id = $1;', [parseInt(request.body.id_sztuki, 10)])
 		.then(res => {
 			pool
 				.query(getFreeSitsInPlay, [parseInt(request.body.id_sztuki, 10)])
@@ -48,14 +50,26 @@ const buyTicket = (request, response) => {
 	  					miejsca: res1.rows
 					});
 				})
-				.catch(err => console.error('Error executing query', err.stack))
+				.catch(err => pool.query('ROLLBACK;'))
 		}) 
-		.catch(err => console.error('Error executing query', err.stack))
+		.catch(err => pool.query('ROLLBACK;'))
 
 }
 
 const ticketSuccess = (request, response) => {
-	console.log('success')
+	let imie = request.body.imie
+	let nazwisko = request.body.nazwisko
+	let id_sztuki = parseInt(request.body.id_sztuki, 10)
+	let numer_miejsca = parseInt(request.body.numer_miejsca, 10)
+
+	pool
+		.query('INSERT INTO bilety(numer_miejsca, imie, nazwisko, id_sztuki) VALUES($1,$2,$3,$4);', [numer_miejsca, imie, nazwisko, id_sztuki])
+		.then(res => response.render('pages/buysuccess'))
+		.catch(err => {
+			console.error('Error executing query', err.stack)
+			pool.query('ROLLBACK;')
+		})
+	pool.query('COMMIT;')
 }
 
 module.exports = {
