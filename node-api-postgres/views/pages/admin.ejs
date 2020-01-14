@@ -26,10 +26,9 @@
         <h1>Aktualizacja sztuki</h1>
         <form>
             <select name="plays">
-                <option id="1" value="makbet">Makbet</option>
-                <option id="2" value="hamlet">Hamlet</option>
-                <option id="3" value="romeo">Romeo i Julia</option>
-                <option id="4" value="ogrod">Tajemniczy ogród</option>
+                <% plays.forEach(function(play){ %>
+                    <option id="<%= play.id %>"><%= play.nazwa %></option>
+                <% }); %>
             </select>
             <input type="text" id="title" name="title" placeholder="Nowy tytuł sztuki" />  
             Wybierz datę:

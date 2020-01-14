@@ -8,12 +8,12 @@ const pool = new Pool({
 })
 
 const getPlays = (request, response) => {
-  pool.query('SELECT * FROM sztuka ORDER BY id ASC', (error, results) => {
-    if (error) {
-      throw error
-    }
-    response.status(200).json(results.rows)
-  })
+  pool
+  	.query('SELECT * FROM sztuka ORDER BY id ASC')
+  	.then(res => response.render('pages/admin', {
+  		plays: res.rows
+  	}))
+  	.catch(err => console.error('Error executing query', err.stack))
 }
 
 module.exports = {
