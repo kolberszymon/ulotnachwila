@@ -42,7 +42,7 @@
     <div class="admin-delete">
         <h1>Usuwanie sztuki</h1>
         <form method="post" action="/playDelete">
-            <select name="id_sztuki"  value="<%= play.id %>">
+            <select name="id_sztuki">
                 <% plays.forEach(function(play){ %>
                 <option id="<%= play.id %>" value="<%= play.id %>"><%= (play.nazwa + ' ' + play.data_sztuki) %></option>
                 <% }); %>

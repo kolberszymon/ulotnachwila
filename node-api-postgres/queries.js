@@ -99,7 +99,19 @@ const addPlay = (request, response) => {
       "INSERT INTO sztuka(id, nazwa, data_sztuki, ilosc_miejsc) VALUES(nextval('prim'),$1, $2, $3);",
       [nazwa, data + " " + godzina, parseInt(miejsca, 10)]
     )
-    .then(res => response.render("pages/admin"))
+    .then(res => {
+      pool
+        .query("SELECT * from sztuka ORDER BY id ASC;")
+        .then(plays => {
+            response.render("pages/admin", {
+            plays: plays.rows
+          })
+        })
+        .catch(err => {
+          console.error("Error executing query", err.stack);
+        });
+
+    })
     .catch(err => {
       console.error("Error executing query", err.stack);
     });
@@ -124,8 +136,7 @@ const updatePlay = (request, response) => {
         )
         .then(res1 => {
           response.render("pages/admin", {
-            sztuka: res.rows[0],
-            miejsca: res1.rows
+            plays: res.rows
           });
         })
         .catch(err => {
