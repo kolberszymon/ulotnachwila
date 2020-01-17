@@ -103,14 +103,13 @@ const addPlay = (request, response) => {
       pool
         .query("SELECT * from sztuka ORDER BY id ASC;")
         .then(plays => {
-            response.render("pages/admin", {
+          response.render("pages/admin", {
             plays: plays.rows
-          })
+          });
         })
         .catch(err => {
           console.error("Error executing query", err.stack);
         });
-
     })
     .catch(err => {
       console.error("Error executing query", err.stack);
@@ -151,8 +150,10 @@ const updatePlay = (request, response) => {
 const deletePlay = (request, response) => {
   console.log(request.body);
 
+  let id_sztuki = request.body.id_sztuki;
+
   pool
-    .query("DELETE from sztuka where id=$1;", [12])
+    .query("DELETE from sztuka where id=$1;", [parseInt(id_sztuki)])
     .then(res =>
       response.render("pages/admin", {
         plays: res.rows
