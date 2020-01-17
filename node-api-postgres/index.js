@@ -19,5 +19,9 @@ app.listen(port, () => {
 
 app.get('/', db.homePage)
 app.get('/plays', db.getPlays)
+app.get('/admin', db.getAdmin)
 app.post('/', db.buyTicket)
 app.post('/buyTicket', db.ticketSuccess)
+app.post('/playAdd', db.addPlay)
+app.post('/playUpdate', db.updatePlay)
+app.post('/playDelete', db.deletePlay)
