@@ -103,7 +103,7 @@ const addPlay = (request, response) => {
       pool
         .query("SELECT * from sztuka ORDER BY id ASC;")
         .then(plays => {
-          response.render("pages/admin", {
+          response.render("pages/play-added", {
             plays: plays.rows
           });
         })
@@ -134,7 +134,7 @@ const updatePlay = (request, response) => {
           [nazwa, data + " " + godzina, parseInt(miejsca, 10), id_sztuki]
         )
         .then(res1 => {
-          response.render("pages/admin", {
+          response.render("pages/play-updated", {
             plays: res.rows
           });
         })
@@ -155,7 +155,7 @@ const deletePlay = (request, response) => {
   pool
     .query("DELETE from sztuka where id=$1;", [parseInt(id_sztuki)])
     .then(res =>
-      response.render("pages/admin", {
+      response.render("pages/play-deleted", {
         plays: res.rows
       })
     )
