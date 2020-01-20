@@ -6,21 +6,21 @@
     <title>Ulotna chwila</title>
     <base href="/">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link type="text/css" href="styles.css" title="Default Styles" media="screen" />
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" media="screen" />
 </head>
 
 <body>
-    <form method="post" action="/">
+    <form class="reserve-seat-form" method="post" action="/">
         <h1>Zarezerwuj miejsce na sztukę</h1>
-        <select name="id_sztuki">
+        <select class="plays-option" name="id_sztuki">
             <% plays.forEach(function(play){ %>
-            <option id="<%= play.id %>" value="<%= play.id %>"><%= play.nazwa %> | Wolne miejsca:
+            <option class="play-option" id="<%= play.id %>" value="<%= play.id %>"><%= play.nazwa %> | Wolne miejsca:
                 <%= play.wolnemiejsca %> </option>
             <% }); %>
         </select> <br><br>
-        Imie: <input type="text" name="imie"> <br><br>
-        Nazwisko: <input type="text" name="nazwisko"> <br><br>
-        <input type="submit" value="Rezerwuje miejsce!">
+        <input class="play-input" type="text" name="imie" placeholder="Imię"> <br><br>
+        <input class="play-input" type="text" name="nazwisko" placeholder="Nazwisko"> <br><br>
+        <input class="submit-button" type="submit" value="Rezerwuję miejsce!">
     </form>
 </body>
 

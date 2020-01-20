@@ -6,49 +6,53 @@
     <title>Ulotna chwila</title>
     <base href="/admin">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/scss" href="/assets/styles.scss" />
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" media="screen" />
 </head>
 
 <body>
-    <div class="admin-add">
-        <h1>Dodawanie sztuki</h1>
-        <form method="post" action="/play-added">
-            <input type="text" name="nazwa" placeholder="Tytuł sztuki" /> <br><br>
-            Wybierz datę:
-            <input type="date" name="data"> <br><br>
-            Wybierz godzinę:
-            <input type="time" name="godzina"> <br><br>
-            <input type="text" name="miejsca" placeholder="Ilość miejsc"> <br><br>
-            <input type="submit" value="Dodaj">
-        </form>
-    </div>
-    <div class="admin-update">
-        <h1>Aktualizacja sztuki</h1>
-        <form method="post" action="/play-updated">
-            <select name="id_sztuki">
-                <% plays.forEach(function(play){ %>
-                <option id="<%= play.id %>" value="<%= play.id %>"><%= (play.nazwa + ' ' + play.data_sztuki) %></option>
-                <% }); %>
-            </select> <br><br>
-            <input type="text" name="nazwa" placeholder="Nowy tytuł sztuki" /> <br><br>
-            Wybierz datę:
-            <input type="date" name="data"> <br><br>
-            Wybierz godzinę:
-            <input type="time" name="godzina"> <br><br>
-            <input type="text" name="miejsca" placeholder="Ilość miejsc"> <br><br>
-            <input type="submit" value="Zatwierdź zmiany">
-        </form>
-    </div>
-    <div class="admin-delete">
-        <h1>Usuwanie sztuki</h1>
-        <form method="post" action="/play-deleted">
-            <select name="id_sztuki">
-                <% plays.forEach(function(play){ %>
-                <option id="<%= play.id %>" value="<%= play.id %>"><%= (play.nazwa + ' ' + play.data_sztuki) %></option>
-                <% }); %>
-            </select> <br><br>
-            <input type="submit" value="Zatwierdź zmiany">
-        </form>
+    <div class="admin-page">
+        <div class="reserve-seat-form">
+            <h1>Dodawanie sztuki</h1>
+            <form method="post" action="/play-added">
+                <input class="play-input" type="text" name="nazwa" placeholder="Tytuł sztuki" /> <br><br>
+                Data:
+                <input class="play-input" type="date" name="data"> <br><br>
+                Godzina:
+                <input class="play-input" type="time" name="godzina"> <br><br>
+                <input class="play-input" type="text" name="miejsca" placeholder="Ilość miejsc"> <br><br>
+                <input class="submit-button" type="submit" value="Dodaj">
+            </form>
+        </div>
+        <div class="reserve-seat-form">
+            <h1>Aktualizacja sztuki</h1>
+            <form method="post" action="/play-updated">
+                <select class="plays-option" name="id_sztuki">
+                    <% plays.forEach(function(play){ %>
+                    <option id="<%= play.id %>" value="<%= play.id %>"><%= (play.nazwa + ' ' + play.data_sztuki) %>
+                    </option>
+                    <% }); %>
+                </select> <br><br>
+                <input class="play-input" type="text" name="nazwa" placeholder="Nowy tytuł sztuki" /> <br><br>
+                Data:
+                <input class="play-input" type="date" name="data"> <br><br>
+                Godzina:
+                <input class="play-input" type="time" name="godzina"> <br><br>
+                <input class="play-input" type="text" name="miejsca" placeholder="Ilość miejsc"> <br><br>
+                <input class="submit-button" type="submit" value="Zatwierdź zmiany">
+            </form>
+        </div>
+        <div class="reserve-seat-form">
+            <h1>Usuwanie sztuki</h1>
+            <form method="post" action="/play-deleted">
+                <select class="plays-option" name="id_sztuki">
+                    <% plays.forEach(function(play){ %>
+                    <option id="<%= play.id %>" value="<%= play.id %>"><%= (play.nazwa + ' ' + play.data_sztuki) %>
+                    </option>
+                    <% }); %>
+                </select> <br><br>
+                <input class="submit-button" type="submit" value="Zatwierdź zmiany">
+            </form>
+        </div>
     </div>
 </body>
 

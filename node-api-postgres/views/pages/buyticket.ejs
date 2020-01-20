@@ -6,23 +6,23 @@
     <title>Ulotna chwila</title>
     <base href="/buyticket">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/scss" href="/assets/styles.scss" />
+    <link rel="stylesheet" type="text/css" href="/css/styles.css" media="screen" />
 </head>
 
 <body>
-    <form method="post" action="/buyticket">
+    <form class="reserve-seat-form" method="post" action="/buyticket">
         <h1>Kup bilet</h1>
         Imie: <%= user.imie %> <input type="hidden" value="<%= user.imie %>" name="imie"> <br><br>
         Nazwisko: <%= user.nazwisko %> <input type="hidden" value="<%= user.nazwisko %>" name="nazwisko"> <br><br>
         Sztuka: <%= sztuka.nazwa %> <input type="hidden" value="<%= sztuka.id %>" name="id_sztuki"> <br><br>
         Data: <%= sztuka.data_sztuki %> <br><br>
         Miejsce:
-        <select name="numer_miejsca">
+        <select class="plays-option" name="numer_miejsca">
             <% miejsca.forEach(function(miejsce){ %>
             <option value="<%= miejsce.numer_miejsca %>"><%= miejsce.numer_miejsca %></option>
             <% }); %>
         </select> <br><br>
-        <input type="submit" value="Kupuje">
+        <input class="submit-button" type="submit" value="Kupuje">
     </form>
 </body>
 
